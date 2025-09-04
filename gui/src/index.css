@@ -86,21 +86,10 @@ body {
   margin-right: 650px;
 }
 
-.chat-header {
-  padding: 20px;
-  background-color: var(--color-bg-primary);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  flex-shrink: 0;
-}
 
 .chat-header h1 {
   margin: 0;
   font-size: 1.8rem;
-  flex: 1;
   text-align: center;
 }
 
@@ -401,7 +390,7 @@ body {
 
 .panel-content {
   flex: 1;
-  overflow-y: auto;
+  overflow: hidden;
   position: relative;
 }
 
@@ -411,7 +400,6 @@ body {
   padding: 40px;
 }
 
-/* Enhanced Panel Dragger */
 .panel-dragger {
   position: absolute;
   left: -5px;
@@ -435,12 +423,16 @@ body {
 .messages-container {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 100%;
+  justify-content: flex-start;
   transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+  padding-top: 20px;
 }
 
 .message-wrapper {
@@ -452,15 +444,10 @@ body {
   max-width: 800px;
 }
 
-.message-wrapper.user {
-  flex-direction: row-reverse;
+.message-wrapper:not(.user) {
   justify-content: flex-start;
 }
 
-.message-wrapper:not(.user) {
-  justify-content: flex-start;
-  padding-left: 60px; /* Move Cody's messages slightly left for symmetry */
-}
 
 .message-avatar {
   width: 40px;
@@ -476,7 +463,7 @@ body {
 }
 
 .message-wrapper.user .message-avatar {
-  background-color: #a7c7e7; /* Lighter blue */
+  background-color: #a7c7e7; /* Light blue */
 }
 
 .message-content {
@@ -486,17 +473,22 @@ body {
   flex-shrink: 1;
 }
 
-/* Cody's messages - left aligned with max width */
+/* Cody's messages */
 .message-wrapper:not(.user) .message-content {
   max-width: 600px;
   width: fit-content;
 }
 
-/* User's messages - right aligned within the same boundary */
+/* User's messages */
 .message-wrapper.user .message-content {
   max-width: 600px;
   width: fit-content;
   align-items: flex-end;
+}
+
+.message-wrapper.user {
+  flex-direction: row-reverse;
+  margin-left: flex-start;
 }
 
 .message-header {
@@ -612,43 +604,10 @@ body {
   0%, 80%, 100% { transform: scale(0.5); opacity: 0.5; }
   40% { transform: scale(1); opacity: 1; }
 }
-
 /* ============================================= */
 /* ===== (4) CHAT INPUT & BUTTONS ===== */
 /* ============================================= */
-.chat-input-container {
-  display: flex;
-  padding: 20px;
-  background-color: #f0f0f0;
-  border-top: 1px solid #ddd;
-  gap: 15px;
-  align-items: flex-end;
-  transition: all 0.3s ease;
-}
 
-.chat-input, .chat-textarea {
-  flex: 1;
-  padding: 12px 18px;
-  border: 1px solid #ccc;
-  border-radius: 24px;
-  font-size: 1rem;
-  font-family: 'Playfair Display', serif;
-  resize: none;
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  background-color: white;
-  color: var(--color-bg-primary-dark);
-}
-
-.chat-textarea {
-  border-radius: 18px;
-  max-height: 250px;
-}
-
-.chat-input:focus, .chat-textarea:focus {
-  border-color: var(--color-bg-primary);
-  box-shadow: 0 0 0 3px rgba(151, 114, 89, 0.2);
-}
 
 .send-button, .change-settings-button, .view-code-button, .primary-button, .validate-lql-button {
   background-color: var(--color-bg-primary);
@@ -2094,25 +2053,35 @@ body {
   /* Chat Header Updates */
 
   .chat-header {
-    background: #fff;
-    border-bottom: 1px solid #e9ecef;
-    padding: 0.75rem 1rem;
+    padding: 20px;
+    background-color: var(--color-bg-primary);
+    color: white;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    justify-content: center; /* Change to center */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+    position: relative; /* Add relative positioning */
   }
 
   .menu-button {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
     background: none;
     border: none;
-    font-size: 1.25rem;
-    padding: 0.5rem;
+    font-size: 24px;
     cursor: pointer;
-    border-radius: 6px;
-    transition: background-color 0.2s ease;
-    color: #6c757d;
+    color: white;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .menu-button:hover {
@@ -3647,4 +3616,1155 @@ body {
     color: black;
     border-bottom: 1px solid black;
   }
+}
+
+.impl-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 2px solid;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  outline: none;
+}
+
+/* Default state - not active, not selected, not refined */
+.impl-button {
+  background-color: white;
+  color: #555;
+  border-color: #ccc;
+}
+
+.impl-button:hover {
+  border-color: var(--color-bg-primary);
+  color: var(--color-bg-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Active state (currently viewing) - brown when not selected or refined */
+.impl-button.active:not(.selected-for-refinement):not(.refined) {
+  background-color: var(--color-bg-primary);
+  color: white;
+  border-color: var(--color-bg-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(151, 114, 89, 0.3);
+}
+
+/* Selected for refinement state - BLUE (highest priority) */
+.impl-button.selected-for-refinement {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  border-color: #3b82f6;
+  font-weight: 700;
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+  animation: selectedPulse 2s infinite;
+}
+
+.impl-button.selected-for-refinement:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+}
+
+.impl-button.selected-for-refinement.active {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Refined implementation state - GREEN */
+.impl-button.refined:not(.selected-for-refinement) {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border-color: #10b981;
+  font-weight: 700;
+  box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+}
+
+.impl-button.refined:not(.selected-for-refinement):hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+}
+
+.impl-button.refined.active:not(.selected-for-refinement) {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Special case: Refined AND selected for further refinement - Blue wins but with special styling */
+.impl-button.refined.selected-for-refinement {
+  background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
+  border: 2px solid #3b82f6;
+  position: relative;
+  overflow: hidden;
+}
+
+.impl-button.refined.selected-for-refinement::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #3b82f6, #10b981, #3b82f6);
+  border-radius: 10px;
+  z-index: -1;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+.impl-button.refined.selected-for-refinement:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #059669 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+}
+
+/* Tooltips removed - no hover popups */
+
+/* Animation for selected button */
+@keyframes selectedPulse {
+  0%, 100% {
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.5);
+  }
+}
+
+/* Animation for refined + selected button border */
+@keyframes gradientShift {
+  0%, 100% {
+    background: linear-gradient(45deg, #3b82f6, #10b981, #3b82f6);
+  }
+  50% {
+    background: linear-gradient(45deg, #10b981, #3b82f6, #10b981);
+  }
+}
+
+/* Focus states for accessibility */
+.impl-button:focus {
+  outline: 3px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+}
+
+/* Disabled state */
+.impl-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.impl-button:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .impl-button {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+
+  .impl-button[title]:hover::after,
+  .impl-button[title]:hover::before {
+    display: none; /* Hide tooltips on mobile */
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .impl-button.refined:not(.selected-for-refinement) {
+    background: #059669;
+    border: 2px solid #047857;
+  }
+
+  .impl-button.selected-for-refinement {
+    background: #2563eb;
+    border: 2px solid #1d4ed8;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .impl-button {
+    transition: none;
+    animation: none;
+  }
+
+  .impl-button.selected-for-refinement {
+    animation: none;
+  }
+
+  .impl-button.refined.selected-for-refinement::before {
+    animation: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .impl-button {
+    background: white !important;
+    color: black !important;
+    border: 1px solid black !important;
+    box-shadow: none !important;
+  }
+}
+.right-code-panel {
+  position: fixed;
+  right: -650px;
+  top: 0;
+  width: 650px;
+  height: 100vh;
+  background-color: white;
+  border-left: 1px solid #e0e0e0;
+  transition: right 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+}
+
+.panel-content {
+  flex: 1;
+  overflow: hidden; /* Remove automatic overflow scrolling */
+  position: relative;
+}
+
+.chat-header,
+.panel-header,
+.sidebar-header {
+  padding: 20px; /* Ensure all have same padding */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+  min-height: 60px; /* Ensure all have same minimum height */
+  height: auto; /* Let content define height */
+}
+
+.chat-header {
+  background-color: var(--color-bg-primary);
+  color: white;
+}
+
+.panel-header {
+  background-color: var(--color-bg-primary);
+  color: white;
+}
+
+.sidebar-header {
+  background-color: var(--color-bg-primary);
+  color: white;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+
+.code-display-container {
+  height: 100%;
+  overflow-y: auto; /* Only CodeDisplay content should scroll */
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom scrollbar for code display only */
+.code-display-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.code-display-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.code-display-container::-webkit-scrollbar-thumb {
+  background-color: #967259;
+  border-radius: 4px;
+}
+
+.code-display-container::-webkit-scrollbar-thumb:hover {
+  background-color: #5c4433;
+}
+
+/* Code sections scrolling */
+.code-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #967259 #f9fafb;
+}
+
+.code-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.code-scroll::-webkit-scrollbar-track {
+  background: #f9fafb;
+  border-radius: 3px;
+}
+
+.code-scroll::-webkit-scrollbar-thumb {
+  background-color: #967259;
+  border-radius: 3px;
+}
+
+.code-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #5c4433;
+}
+
+/* Ensure messages container doesn't have horizontal scrollbar */
+.messages-container {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Remove any unwanted scrollbars from main chat area */
+.chat-main {
+  overflow: hidden;
+}
+
+/* Center header text for left sidebar */
+.left-sidebar .sidebar-header {
+  text-align: center;
+}
+
+.left-sidebar .sidebar-header h2 {
+  text-align: center;
+  flex: 1;
+}
+
+/* Ensure close button positioning doesn't interfere with centered text */
+.sidebar-header .close-button,
+.panel-header .close-button {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.sidebar-header .close-button {
+  right: 20px;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .chat-header,
+  .panel-header,
+  .sidebar-header {
+    padding: 15px;
+    min-height: 50px;
+  }
+
+  .chat-header h1,
+  .panel-header h2,
+  .sidebar-header h2 {
+    font-size: 1.5rem;
+  }
+
+
+  .sidebar-header .close-button,
+  .panel-header .close-button {
+    right: 15px;
+  }
+}
+.start-over-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+  min-width: fit-content;
+}
+
+.start-over-button:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+}
+
+.start-over-button:active {
+  background-color: #bd2130;
+  transform: translateY(0);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.start-over-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.chat-header {
+  padding: 20px;
+  background-color: var(--color-bg-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Create equal-width containers for left and right sides */
+.header-left,
+.header-right {
+  width: 200px;
+  display: flex;
+  align-items: center;
+}
+
+.header-left {
+  justify-content: flex-start;
+}
+
+.header-right {
+  justify-content: flex-end;
+}
+
+/* Center section takes remaining space and centers content */
+.header-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chat-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+/* Menu button styling */
+.menu-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Header actions styling */
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.header-actions .menu-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-actions .menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Session info should be centered */
+.session-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: white;
+  justify-content: center;
+}
+
+.session-info h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: white;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .header-left,
+  .header-right {
+    width: 120px;
+  }
+
+  .header-actions {
+    gap: 5px;
+  }
+
+  .header-actions .menu-button {
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+  }
+
+  .menu-button {
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+  }
+}
+
+.chat-input-container {
+  display: flex;
+  padding: 20px;
+  background-color: #f0f0f0;
+  border-top: 1px solid #ddd;
+  align-items: flex-end;
+  transition: all 0.3s ease;
+  position: relative;
+  justify-content: center; /* Center the entire content */
+}
+.chat-input-container {
+  padding-left: 100px !important; /* 20px original + 60px offset */
+  padding-right: 20px !important; /* Keep right padding normal */
+}
+
+/* Remove the spacer approach and use a simpler centered flex container */
+.input-center {
+  display: flex;
+  gap: 15px;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  max-width: 1000px; /* Maximum width for the input area */
+}
+
+/* Center the textarea within its container */
+.chat-textarea {
+  width: 800px;
+  max-width: calc(100vw - 200px);
+  min-width: 300px;
+  height: 80px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 12px 18px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Playfair Display', serif;
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: white;
+  color: var(--color-bg-primary-dark);
+}
+
+.chat-textarea:focus {
+  border-color: var(--color-bg-primary);
+  box-shadow: 0 0 0 3px rgba(151, 114, 89, 0.2);
+}
+
+/* Send button styling */
+.send-button {
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 1rem;
+  white-space: nowrap;
+  background-color: var(--color-bg-primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  flex-shrink: 0; /* Prevent button from shrinking */
+}
+
+.send-button:hover:not(:disabled) {
+  background-color: var(--color-bg-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.send-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.send-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Remove the spacer classes as they're no longer needed */
+.input-spacer-left,
+.input-spacer-right {
+  display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .input-center {
+    max-width: none;
+    padding: 0 10px;
+  }
+
+  .chat-textarea {
+    min-width: 250px;
+  }
+
+  .send-button {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .input-center {
+    padding: 0 5px;
+  }
+
+  .chat-textarea {
+    min-width: 200px;
+  }
+
+  .input-center {
+    gap: 10px;
+  }
+}
+/* Center loading dots in loading screen */
+.app-loading .loading-dots {
+  display: flex;
+  justify-content: center; /* Center the dots horizontally */
+  align-items: center; /* Center the dots vertically within their container */
+  gap: 8px;
+  margin: 20px auto; /* Center the entire dots container */
+  width: fit-content; /* Make container only as wide as needed */
+}
+
+.app-loading .loading-dots span {
+  width: 12px;
+  height: 12px;
+  background-color: var(--color-text-primary);
+  border-radius: 50%;
+  animation: loading-bounce 1.4s infinite ease-in-out both;
+}
+
+/* New header button styling */
+.header-actions .menu-button {
+  background: white; /* White background */
+  color: var(--color-bg-primary); /* Brown text */
+  border: 2px solid var(--color-bg-primary); /* Brown border */
+  padding: 6px 12px; /* More padding for text buttons */
+  border-radius: 6px; /* Slightly rounded corners */
+  font-size: 14px; /* Smaller font for button text */
+  font-weight: 600; /* Bold text */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: auto; /* Auto width for text */
+  height: auto; /* Auto height for text */
+  min-width: 40px; /* Minimum width */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif; /* Match app font */
+}
+
+.header-actions .menu-button:hover {
+  background-color: var(--color-bg-primary); /* Brown background on hover */
+  color: white; /* White text on hover */
+  transform: translateY(-1px); /* Slight lift effect */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Shadow on hover */
+}
+
+.header-actions .menu-button:active {
+  transform: translateY(0); /* Reset transform on click */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Smaller shadow when pressed */
+}
+
+/* Special styling for logout button - keep the door icon */
+.header-actions .logout-button {
+  background: white;
+  color: #dc3545; /* Red color for logout */
+  border: 2px solid #dc3545; /* Red border */
+  font-size: 18px; /* Larger for icon */
+  width: 40px; /* Square for icon */
+  height: 40px;
+  min-width: 40px;
+  padding: 8px;
+}
+
+.header-actions .logout-button:hover {
+  background-color: #dc3545; /* Red background on hover */
+  color: white;
+}
+
+/* Ensure proper spacing between buttons */
+.header-actions {
+  display: flex;
+  gap: 8px; /* Slightly smaller gap for text buttons */
+  align-items: center;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .header-actions .menu-button {
+    font-size: 12px;
+    padding: 4px 8px;
+    min-width: 35px;
+  }
+
+  .header-actions .logout-button {
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+  }
+
+  .header-actions {
+    gap: 6px;
+  }
+}
+.panel-header {
+  padding: 20px;
+  background-color: var(--color-bg-primary);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: auto;
+  min-height: 60px;
+  position: relative; /* Ensure positioning context for absolute children */
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  flex: 1; /* Take up available space */
+}
+
+/* Restore the close button styling */
+.panel-header .close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute; /* Position absolutely */
+  right: 20px; /* 20px from the right edge */
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%); /* Adjust for true vertical centering */
+  z-index: 10; /* Ensure it's above other elements */
+}
+
+.panel-header .close-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Ensure panel header actions don't interfere with close button */
+.panel-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 50px; /* Give space for the close button */
+}
+
+/* Make sure the refinement indicator doesn't overlap */
+.panel-header-actions > div {
+  margin-right: 0; /* Remove any extra margin */
+}
+
+/* Remove any conflicting styles that might hide the button */
+.right-code-panel .close-button {
+  display: flex !important; /* Force display */
+  visibility: visible !important; /* Force visibility */
+}
+/* Fix main application scrollbar by ensuring proper height constraints */
+
+/* Ensure html and body don't scroll */
+html, body {
+  height: 100%;
+  overflow: hidden; /* Prevent main page scrolling */
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure root containers use full height without exceeding it */
+#root, .app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Use viewport height, not min-height */
+  width: 100vw;
+  overflow: hidden; /* Prevent overflow scrolling */
+}
+
+/* Chat interface should fill available space */
+.chat-interface {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  font-family: 'Playfair Display', serif;
+  overflow: hidden; /* Prevent main interface scrolling */
+}
+
+/* Ensure main chat area doesn't exceed boundaries */
+.chat-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #fafafa;
+  transition: margin 0.3s ease;
+  height: 100vh; /* Constrain to viewport height */
+  overflow: hidden; /* Prevent overflow */
+}
+
+/* Messages container should handle its own scrolling */
+.messages-container {
+  flex: 1;
+  overflow-y: auto; /* Only this should scroll */
+  overflow-x: hidden;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+  /* Remove any height constraints that might cause overflow */
+}
+
+/* Ensure input container doesn't cause overflow */
+.chat-input-container {
+  flex-shrink: 0; /* Don't shrink */
+  display: flex;
+  padding: 20px;
+  background-color: #f0f0f0;
+  border-top: 1px solid #ddd;
+  align-items: flex-end;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+.sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-bg-primary);
+  color: white;
+
+  /* ADD THIS LINE to create the vertical separator */
+  border-right: 2px solid white;
+}
+
+.panel-header {
+  padding: 20px;
+  background-color: var(--color-bg-primary);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  /* ADD THIS LINE to create the vertical separator */
+  border-left: 2px solid white;
+}
+/* ================================================= */
+/* ===== CODE DISPLAY THEME & COMPONENT STYLES ===== */
+/* ================================================= */
+
+/* --- Component Structure --- */
+
+.code-display-container {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+
+.code-content-area {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.code-details {
+  padding: 1rem;
+}
+
+.code-section {
+  margin-bottom: 1.5rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.section-header h4 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.copy-button {
+  padding: 0.3rem 0.6rem;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.code-block {
+  padding: 0.8rem;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+  font-family: 'Monaco', Menlo, monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  margin: 0;
+  white-space: pre-wrap;
+  max-height: 350px;
+}
+
+.metrics-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.metric-progress-item {
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+}
+
+.metric-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.metric-progress-bar {
+  width: 100%;
+  height: 6px;
+  background-color: #e5e7eb;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.metric-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.refined-banner {
+  background-color: #ecfdf5;
+  border: 1px solid #bbf7d0;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: #065f46;
+  font-weight: 500;
+}
+
+/* --- Default (Brown) Theme --- */
+
+.theme-default .code-header {
+  background-color: var(--color-bg-primary);
+}
+
+.theme-default .metrics-bar {
+  background-color: rgba(151, 114, 89, 0.1);
+  border-bottom: 1px solid rgba(151, 114, 89, 0.2);
+  color: var(--color-bg-primary-dark);
+}
+
+.theme-default .metric-value {
+  background-color: var(--color-bg-primary);
+}
+
+.theme-default .code-block {
+  background-color: #f9fafb;
+  border-color: #e5e7eb;
+  color: var(--color-bg-primary-dark);
+}
+
+.theme-default .section-header h4 {
+  color: var(--color-bg-primary-dark);
+}
+
+.theme-default .copy-button {
+  background-color: var(--color-bg-primary);
+}
+
+.theme-default .metric-progress-item {
+  background-color: #f9fafb;
+  border-color: #e5e7eb;
+}
+
+.theme-default .metric-progress-header span {
+  color: var(--color-bg-primary-dark);
+}
+
+.theme-default .metric-progress-fill {
+  background-color: var(--color-bg-primary);
+}
+
+
+/* --- Refined (Green) Theme --- */
+
+.theme-refined .code-header {
+  background-color: #10b981; /* Green */
+}
+
+.theme-refined .metrics-bar {
+  background-color: rgba(16, 185, 129, 0.1);
+  border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+  color: #065f46; /* Dark Green */
+}
+
+.theme-refined .metric-value {
+  background-color: #10b981;
+}
+
+.theme-refined .code-block {
+  background-color: #f0fdf4; /* Light Green */
+  border-color: #bbf7d0; /* Lighter Green */
+  color: #065f46;
+}
+
+.theme-refined .section-header h4 {
+  color: #065f46;
+}
+
+.theme-refined .copy-button {
+  background-color: #10b981;
+}
+
+.theme-refined .metric-progress-item {
+  background-color: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.theme-refined .metric-progress-header span {
+  color: #065f46;
+}
+
+.theme-refined .metric-progress-fill {
+  background-color: #10b981;
+}
+
+/* --- General Component Styles (can be placed with the theme) --- */
+.code-header {
+  color: white;
+  padding: 0.8rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-rank-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.header-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  flex: 1;
+}
+
+.header-generated-by {
+  font-size: 0.8rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 0.3rem 0.6rem;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+.metrics-bar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+}
+
+.metric-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.metric-item .metric-value {
+  color: white;
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
 }

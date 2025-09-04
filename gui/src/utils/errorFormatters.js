@@ -10,23 +10,23 @@
  * @returns {string} A formatted string ready for display in a message bubble.
  */
 export function formatLqlErrorsForDisplay(errors) {
-    if (!errors || errors.length === 0) {
-        return "No errors found.";
+  if (!errors || errors.length === 0) {
+    return "No errors found.";
+  }
+
+  // Standardize error messages, whether they are strings or objects with a 'message' property.
+  const errorMessages = errors.map((error) => {
+    if (typeof error === "string") {
+      return error;
     }
+    if (typeof error === "object" && error.message) {
+      return error.message;
+    }
+    return "An unspecified error occurred.";
+  });
 
-    // Standardize error messages, whether they are strings or objects with a 'message' property.
-    const errorMessages = errors.map(error => {
-        if (typeof error === 'string') {
-            return error;
-        }
-        if (typeof error === 'object' && error.message) {
-            return error.message;
-        }
-        return 'An unspecified error occurred.';
-    });
-
-    // Simple formatting with bullet points.
-    return errorMessages.map(msg => `- ${msg}`).join('\n');
+  // Simple formatting with bullet points.
+  return errorMessages.map((msg) => `- ${msg}`).join("\n");
 }
 
 /**
@@ -35,17 +35,17 @@ export function formatLqlErrorsForDisplay(errors) {
  * @returns {string} A simple, clean error message.
  */
 export function getSimpleErrorMessage(error) {
-    if (error instanceof Error) {
-        return error.message;
-    }
-    if (typeof error === 'string') {
-        return error;
-    }
-    if (typeof error === 'object' && error.detail) {
-        return error.detail;
-    }
-    if (typeof error === 'object' && error.message) {
-        return error.message;
-    }
-    return "An unknown error occurred. Please check the console for details.";
+  if (error instanceof Error) {
+    return error.message;
+  }
+  if (typeof error === "string") {
+    return error;
+  }
+  if (typeof error === "object" && error.detail) {
+    return error.detail;
+  }
+  if (typeof error === "object" && error.message) {
+    return error.message;
+  }
+  return "An unknown error occurred. Please check the console for details.";
 }

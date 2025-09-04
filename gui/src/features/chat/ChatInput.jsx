@@ -1,69 +1,63 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from "react";
 
-const ChatInput = ({ onSubmit, placeholder, multiline = false }) => {
-    const [value, setValue] = useState('');
-    const textareaRef = useRef(null);
+/**
+ * A controlled component for user text input in the chat interface.
+ * It supports both single-line and multi-line input and handles form
+ * submission via a button click or the Enter key.
+ *
+ * @param {object} props - The component props.
+ * @param {function} props.onSubmit - The callback function to execute when the user submits text.
+ * @param {string} [props.placeholder] - The placeholder text to display in the input area.
+ * @param {boolean} [props.multiline] - If true, the input will be a textarea; otherwise, a single-line input.
+ * @param {boolean} [props.disabled=false] - If true, the input and send button will be disabled.
+ * @returns {JSX.Element} The rendered chat input component.
+ */
+const ChatInput = ({ onSubmit, placeholder, multiline, disabled }) => {
+  const [text, setText] = useState("");
 
-    useEffect(() => {
-        if (multiline && textareaRef.current) {
-            autoResize();
-        }
-    }, [value, multiline]);
+  /**
+   * Handles the form submission logic.
+   */
+  const handleSubmit = () => {
+    if (text.trim()) {
+      onSubmit(text);
+      setText("");
+    }
+  };
 
-    const autoResize = () => {
-        const textarea = textareaRef.current;
-        if (textarea) {
-            textarea.style.height = 'auto';
-            const newHeight = Math.min(Math.max(textarea.scrollHeight, 80), 300);
-            textarea.style.height = `${newHeight}px`;
-        }
-    };
+  /**
+   * Handles the key down event to allow submission with the Enter key.
+   * @param {React.KeyboardEvent} e - The keyboard event.
+   */
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // Prevents adding a new line in the textarea
+      handleSubmit();
+    }
+  };
 
-    const handleSubmit = () => {
-        if (value.trim()) {
-            onSubmit(value.trim());
-            setValue('');
-        }
-    };
-
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            handleSubmit();
-        }
-    };
-
-    return (
-        <div className="chat-input-container">
-            {multiline ? (
-                <textarea
-                    ref={textareaRef}
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder={placeholder}
-                    className="chat-textarea"
-                    rows={3}
-                />
-            ) : (
-                <input
-                    type="text"
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder={placeholder}
-                    className="chat-input"
-                />
-            )}
-            <button
-                onClick={handleSubmit}
-                className="send-button"
-                disabled={!value.trim()}
-            >
-                Send
-            </button>
-        </div>
-    );
+  return (
+    <div className="chat-input-container">
+      <div className="input-center">
+        <textarea
+          className="chat-textarea"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={placeholder || "Type your prompt..."}
+          disabled={disabled}
+          rows="1"
+        />
+        <button
+          className="send-button"
+          onClick={handleSubmit}
+          disabled={disabled || !text.trim()}
+        >
+          Send
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default ChatInput;

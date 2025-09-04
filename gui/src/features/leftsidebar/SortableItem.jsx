@@ -1,7 +1,17 @@
-import React from 'react';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import React from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
+/**
+ * Renders a single draggable item within a sortable list.
+ * This component integrates with `@dnd-kit` to handle the necessary
+ * attributes, listeners, and styles for drag-and-drop functionality.
+ *
+ * @param {object} props - The component props.
+ * @param {string} props.id - A unique identifier for the sortable item. This should match the item's value in the list.
+ * @param {number} props.index - The zero-based index of the item in the list, used for displaying the rank number.
+ * @returns {JSX.Element} The rendered list item with drag handles and styles.
+ */
 function SortableItem({ id, index }) {
   const {
     attributes,
@@ -14,45 +24,54 @@ function SortableItem({ id, index }) {
     id,
     transition: {
       duration: 150,
-      easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
-    }
+      easing: "cubic-bezier(0.25, 1, 0.5, 1)",
+    },
   });
 
   const style = {
-    // Use CSS.Translate instead of CSS.Transform for better positioning control
     transform: CSS.Translate.toString(transform),
     transition,
     opacity: isDragging ? 0.3 : 1,
-    zIndex: isDragging ? 999 : 'auto',
-    position: 'relative',
+    zIndex: isDragging ? 999 : "auto",
+    position: "relative",
   };
 
   return (
-      <li
-          ref={setNodeRef}
-          style={style}
-          {...attributes}
-          className="sortable-item"
-          data-dragging={isDragging}
+    <li
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      className="sortable-item"
+      data-dragging={isDragging}
+    >
+      <span data-rank={index + 1}>{id}</span>
+      <div
+        {...listeners}
+        className="drag-handle"
+        onTouchStart={(e) => e.stopPropagation()}
+        aria-label="Drag handle"
+        title="Drag to reorder"
       >
-        <span data-rank={index + 1}>{id}</span>
-        <div
-            {...listeners}
-            className="drag-handle"
-            onTouchStart={(e) => e.stopPropagation()}
-            aria-label="Drag handle"
-            title="Drag to reorder"
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="9" cy="5" r="1" />
-            <circle cx="9" cy="12" r="1" />
-            <circle cx="9" cy="19" r="1" />
-            <circle cx="15" cy="5" r="1" />
-            <circle cx="15" cy="12" r="1" />
-            <circle cx="15" cy="19" r="1" />
-          </svg>
-        </div>
-      </li>
+          <circle cx="9" cy="5" r="1" />
+          <circle cx="9" cy="12" r="1" />
+          <circle cx="9" cy="19" r="1" />
+          <circle cx="15" cy="5" r="1" />
+          <circle cx="15" cy="12" r="1" />
+          <circle cx="15" cy="19" r="1" />
+        </svg>
+      </div>
+    </li>
   );
 }
 
