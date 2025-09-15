@@ -1,4 +1,5 @@
-import React from "react";
+
+import React, { Fragment } from "react";
 import ReactMarkdown from "react-markdown";
 
 /**
@@ -15,6 +16,8 @@ import ReactMarkdown from "react-markdown";
 const MessageBubble = ({ message, onOptionClick, onCodeClick }) => {
   /**
    * Formats a timestamp into a localized German date and time string.
+   * Gracefully handles various input types (Date object, string, number)
+   * and returns an empty string for invalid inputs.
    * @param {string|number|Date} timestamp - The timestamp to format.
    * @returns {string} The formatted timestamp string (e.g., "25.07.2024, 14:30").
    */
@@ -58,11 +61,14 @@ const MessageBubble = ({ message, onOptionClick, onCodeClick }) => {
   };
 
   /**
-   * Renders the main content of the message bubble, handling loading states,
-   * Markdown rendering, and interactive elements like buttons.
-   * @returns {JSX.Element} The content to be displayed inside the bubble.
+   * Determines and renders the primary content inside the message bubble.
+   * This function handles different rendering logic based on the message state,
+   * such as loading indicators, plain text for users, or Markdown with
+   * interactive elements for the AI.
+   * @returns {JSX.Element|string} The content to be placed inside the bubble.
    */
   const renderMessageContent = () => {
+    // Display a loading animation if the message is in a loading state.
     if (message.isLoading) {
       return (
         <div className="loading-dots">
@@ -73,69 +79,22 @@ const MessageBubble = ({ message, onOptionClick, onCodeClick }) => {
       );
     }
 
-    return (
-      <div>
-        <ReactMarkdown
-          components={{
-            p: ({ node, ...props }) => (
-              <p {...props} style={{ margin: "0.25em 0" }} />
-            ),
-            strong: ({ node, ...props }) => (
-              <strong {...props} style={{ fontWeight: "bold" }} />
-            ),
-            em: ({ node, ...props }) => (
-              <em {...props} style={{ fontStyle: "italic" }} />
-            ),
-            ul: ({ node, ...props }) => (
-              <ul
-                {...props}
-                style={{
-                  margin: "0.5rem 0",
-                  paddingLeft: "1rem",
-                }}
-              />
-            ),
-            ol: ({ node, ...props }) => (
-              <ol
-                {...props}
-                style={{
-                  margin: "0.5rem 0",
-                  paddingLeft: "1rem",
-                }}
-              />
-            ),
-            li: ({ node, ...props }) => (
-              <li {...props} style={{ margin: "0.1rem 0" }} />
-            ),
-            code: ({ node, inline, ...props }) =>
-              inline ? (
-                <code
-                  {...props}
-                  style={{
-                    backgroundColor: "rgba(0,0,0,0.1)",
-                    padding: "2px 4px",
-                    borderRadius: "3px",
-                    fontSize: "0.9em",
-                  }}
-                />
-              ) : (
-                <code
-                  {...props}
-                  style={{
-                    display: "inline-block",
-                    backgroundColor: "rgba(0,0,0,0.1)",
-                    padding: "0.5rem",
-                    borderRadius: "6px",
-                    margin: "0.5rem 0",
-                    fontSize: "0.9em",
-                  }}
-                />
-              ),
-          }}
-        >
-          {message.content}
-        </ReactMarkdown>
+    // User messages are treated as plain text. The CSS `white-space: pre-wrap`
+    // will correctly preserve any line breaks they enter.
+    if (message.type === "user") {
+      return message.content;
+    }
 
+    // AI messages can contain Markdown and interactive elements.
+    // A Fragment is used here to prevent an extra wrapper div, which
+    // allows for more precise CSS styling of the bubble's direct children.
+    return (
+      <Fragment>
+        <div className="markdown-content">
+          <ReactMarkdown>{message.content}</ReactMarkdown>
+        </div>
+
+        {/* Conditionally render a "View Code" button if the message has associated code. */}
         {message.hasCode && message.codeData && (
           <div style={{ marginTop: "12px" }}>
             <button onClick={onCodeClick} className="view-code-button">
@@ -144,6 +103,7 @@ const MessageBubble = ({ message, onOptionClick, onCodeClick }) => {
           </div>
         )}
 
+        {/* Conditionally render interactive option buttons if they are provided. */}
         {message.options && message.options.length > 0 && (
           <div className="message-options">
             {message.options.map((option, index) => (
@@ -158,7 +118,7 @@ const MessageBubble = ({ message, onOptionClick, onCodeClick }) => {
             ))}
           </div>
         )}
-      </div>
+      </Fragment>
     );
   };
 

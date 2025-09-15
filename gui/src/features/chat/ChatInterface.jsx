@@ -30,33 +30,37 @@ const ChatInterface = ({ onLogout }) => {
   const [generationSettings, setGenerationSettings] = useState({
     rankedCriteria: ["Testability", "Efficiency", "Maintainability"],
     llmEnabled: {
-      "GPT-4o-mini": false,
+      "GPT-4o-mini": true,
       "deepseek-r1:latest": false,
       "gemma3:27b": true,
       "Llama 3.1-latest": false,
     },
     llmVersions: {
-      "GPT-4o-mini": 0,
+      "GPT-4o-mini": 1,
       "deepseek-r1:latest": 0,
       "gemma3:27b": 1,
       "Llama 3.1-latest": 0,
     },
     mavenCentralEnabled: true,
     mavenCentralVersions: 5,
-    generationTimeMinutes: 3,
+    generationTimeMinutes: 4,
   });
   const [isGenerating, setIsGenerating] = useState(false);
   const [isRefining, setIsRefining] = useState(false);
   const [currentResult, setCurrentResult] = useState(null);
   const [selectedCodeId, setSelectedCodeId] = useState(null);
-  const [lql, setLql] = useState(`Stack {
+
+  const DEFAULT_LQL_INTERFACE = `Stack {
     push(java.lang.Object)->java.lang.Object
     pop()->java.lang.Object
     peek()->java.lang.Object
     size()->int
-}`);
+}`
+
+  const [lql, setLql] = useState(DEFAULT_LQL_INTERFACE);
   const [lqlValidationResult, setLqlValidationResult] = useState(null);
   const [sequenceSheet, setSequenceSheet] = useState("");
+  const [userStartedWithPromptOnly, setUserStartedWithPromptOnly] = useState(false);
 
   const messagesEndRef = useRef(null);
 
@@ -170,12 +174,8 @@ const ChatInterface = ({ onLogout }) => {
       setMessages([]);
       setCurrentResult(null);
       setSelectedCodeId(null);
-      setLql(`Stack {
-    push(java.lang.Object)->java.lang.Object
-    pop()->java.lang.Object
-    peek()->java.lang.Object
-    size()->int
-}`);
+      setLql(DEFAULT_LQL_INTERFACE)
+      setUserStartedWithPromptOnly(false);
       setLqlValidationResult(null);
       setSequenceSheet("");
       setError(null);
@@ -237,9 +237,13 @@ const ChatInterface = ({ onLogout }) => {
         }
       }
 
-      if (sessionState.lql_validation_result) {
-        setLql(sessionState.lql_validation_result.lqlCode || "");
+      if (sessionState.lql_validation_result && sessionState.lql_validation_result.lqlCode) {
+        setLql(sessionState.lql_validation_result.lqlCode);
         setLqlValidationResult(sessionState.lql_validation_result);
+        setUserStartedWithPromptOnly(false);
+      } else {
+        setLql(DEFAULT_LQL_INTERFACE);
+        setLqlValidationResult(null);
       }
 
       if (!sessionState.messages || sessionState.messages.length === 0) {
@@ -283,6 +287,7 @@ const ChatInterface = ({ onLogout }) => {
       setCurrentResult(null);
       setSelectedCodeId(null);
       setSequenceSheet("");
+      setUserStartedWithPromptOnly(false);
 
       await loadSessionData(sessionId);
     } catch (error) {
@@ -476,6 +481,11 @@ const ChatInterface = ({ onLogout }) => {
     }
 
     if (currentResult === null) {
+      // If the LQL hasn't been validated and is still the default,
+      // it means the user is starting with just a prompt.
+      if (!lqlValidationResult && lql === DEFAULT_LQL_INTERFACE) {
+        setUserStartedWithPromptOnly(true);
+      }
       startGeneration(text);
     } else {
       startRefinement(text);
@@ -666,7 +676,7 @@ const ChatInterface = ({ onLogout }) => {
       generationData.sequenceSheet = sequenceSheetOverride;
 
     const payload = {
-      lqlInterface: generationData.lql || "",
+      lqlInterface: userStartedWithPromptOnly ? "" : (generationData.lql || ""),
       userPrompt: generationData.prompt || "",
       sequenceSheet: generationData.sequenceSheet || "",
       rankingCriteria: generationSettings.rankedCriteria,
@@ -680,9 +690,9 @@ const ChatInterface = ({ onLogout }) => {
         ),
         features: generationSettings.features || "cc",
         use_nicad: generationSettings.use_nicad || false,
-        use_gpt: generationSettings.llmEnabled["GPT-4o-mini"] || false,
-        samples_gpt: generationSettings.llmVersions["GPT-4o-mini"] || 0,
-        use_gemma: generationSettings.llmEnabled["gemma3:27b"] || false,
+        use_gpt: generationSettings.llmEnabled["GPT-4o-mini"] || true,
+        samples_gpt: generationSettings.llmVersions["GPT-4o-mini"] || 1,
+        use_gemma: generationSettings.llmEnabled["gemma3:27b"] || true,
         samples_gemma: generationSettings.llmVersions["gemma3:27b"] || 0,
         use_llama: generationSettings.llmEnabled["Llama 3.1-latest"] || false,
         samples_llama: generationSettings.llmVersions["Llama 3.1-latest"] || 0,
@@ -697,7 +707,7 @@ const ChatInterface = ({ onLogout }) => {
         use_testGen_ollama: generationSettings.use_testGen_ollama || true,
         samples_LLM_testGen: generationSettings.samples_LLM_testGen || 1,
         model_testGen: generationSettings.model_testGen || "gemma3:27b",
-        use_random_testGen: generationSettings.use_random_testGen || true,
+        use_random_testGen: generationSettings.use_random_testGen || false,
         samples_random_testGen: generationSettings.samples_random_testGen || 5,
         use_type_aware_testGen:
           generationSettings.use_type_aware_testGen || false,

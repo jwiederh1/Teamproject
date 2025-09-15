@@ -20,8 +20,6 @@ function CustomDragOverlay({ children, ...props }) {
         position: "fixed",
         pointerEvents: "none",
         zIndex: 9999,
-        left: 0,
-        top: 0,
         width: "auto",
         height: "auto",
         ...props.style,
